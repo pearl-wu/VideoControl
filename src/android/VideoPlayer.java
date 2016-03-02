@@ -3,7 +3,6 @@ package tw.com.bais.videoplayer;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
