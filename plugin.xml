@@ -25,7 +25,7 @@
     	
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="VideoPlayer">
-                <param name="android-package" value="tw.com.bais.videoplayer"/>
+                <param name="android-package" value="tw.com.bais.videoplayer.VideoPlayer"/>
             </feature>
         </config-file>
         <source-file src="src/android/VideoPlayer.java" target-dir="src/tw/com/bais/videoplayer" />
