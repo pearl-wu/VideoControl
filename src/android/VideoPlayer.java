@@ -1,4 +1,4 @@
-package com.moust.cordova.videoplayer;
+package tw.com.bais.videoplayer;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
