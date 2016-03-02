@@ -2,10 +2,13 @@ package tw.com.bais.videoplayer;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnPreparedListener;
@@ -14,9 +17,13 @@ import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.SurfaceHolder;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.VideoView;
 
@@ -28,20 +35,24 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class VideoPlayer extends CordovaPlugin implements OnCompletionListener, OnPreparedListener, OnErrorListener, OnDismissListener {
+import tw.com.bais.video.R;
+
+public class VideoPlayer extends CordovaPlugin implements OnCompletionListener, OnPreparedListener, OnErrorListener, OnDismissListener, OnBufferingUpdateListener {
 
     protected static final String LOG_TAG = "VideoPlayer";
-
     protected static final String ASSETS = "/android_asset/";
 
     private CallbackContext callbackContext = null;
-
     private Dialog dialog;
-
     private VideoView videoView;
-
     private MediaPlayer player;
-
+    private int videoXx = 0;
+    private int videoYy = 0;
+    private int videowidth = WindowManager.LayoutParams.MATCH_PARENT;
+    private int videoheight = WindowManager.LayoutParams.MATCH_PARENT;
+    private ProgressDialog pro;
+    private Button close_bn;
+    
     /**
      * Executes the request and returns PluginResult.
      *
@@ -57,6 +68,28 @@ public class VideoPlayer extends CordovaPlugin implements OnCompletionListener, 
             CordovaResourceApi resourceApi = webView.getResourceApi();
             String target = args.getString(0);
             final JSONObject options = args.getJSONObject(1);
+            
+            
+            try {
+            	videoXx= options.getInt("videoXx");
+            	videoYy= options.getInt("videoYy");
+            	videowidth= options.getInt("videoWidth");
+            	videoheight= options.getInt("videoHeight");                
+            } catch (Exception e) {
+                PluginResult result = new PluginResult(PluginResult.Status.ERROR, e.getLocalizedMessage());
+                result.setKeepCallback(false); // release status callback in JS side
+                callbackContext.sendPluginResult(result);
+                callbackContext = null;
+            }
+            
+            pro = new ProgressDialog(cordova.getActivity());
+            pro.setMessage("Loading....");
+            WindowManager.LayoutParams propar = pro.getWindow().getAttributes();
+            propar.x = videoXx;
+            propar.y = videoYy;
+            pro.getWindow().setAttributes(propar); 
+            pro.show();
+            
 
             String fileUriStr;
             try {
@@ -106,13 +139,6 @@ public class VideoPlayer extends CordovaPlugin implements OnCompletionListener, 
         return false;
     }
 
-    /**
-     * Removes the "file://" prefix from the given URI string, if applicable.
-     * If the given URI string doesn't have a "file://" prefix, it is returned unchanged.
-     *
-     * @param uriString the URI string to operate on
-     * @return a path without the "file://" prefix
-     */
     public static String stripFileProtocol(String uriString) {
         if (uriString.startsWith("file://")) {
             return Uri.parse(uriString).getPath();
@@ -141,11 +167,19 @@ public class VideoPlayer extends CordovaPlugin implements OnCompletionListener, 
         // videoView.setVideoURI(uri);
         // videoView.setVideoPath(path);
         main.addView(videoView);
+        
+        close_bn = new Button(cordova.getActivity());
+        //FrameLayout bnf = new FrameLayout(cordova.getActivity());
+        //bnf.setLayoutParams(new LayoutParams(80, 80));
+        close_bn.setBackgroundResource(R.drawable.button_cross);
+        main.addView(close_bn);
+        
 
         player = new MediaPlayer();
         player.setOnPreparedListener(this);
         player.setOnCompletionListener(this);
         player.setOnErrorListener(this);
+        player.setOnBufferingUpdateListener(this);
 
         if (path.startsWith(ASSETS)) {
             String f = path.substring(15);
@@ -231,15 +265,34 @@ public class VideoPlayer extends CordovaPlugin implements OnCompletionListener, 
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(dialog.getWindow().getAttributes());
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.width = videowidth;
+        lp.height = videoheight;
+        lp.x = videoXx;
+        lp.y = videoYy;
 
         dialog.setContentView(main);
         dialog.show();
         dialog.getWindow().setAttributes(lp);
+        
+        
+        close_bn.setOnClickListener(new OnClickListener() {
+    		@Override
+    		public void onClick(View v) {
+    			player.stop();
+    			dialog.dismiss();
+    			pro.dismiss();
+    		}
+    	});
+        
+        
     }
 
-    @Override
+    private Context getResources() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         Log.e(LOG_TAG, "MediaPlayer.onError(" + what + ", " + extra + ")");
         if(mp.isPlaying()) {
@@ -272,4 +325,12 @@ public class VideoPlayer extends CordovaPlugin implements OnCompletionListener, 
             callbackContext = null;
         }
     }
+
+	@Override
+	public void onBufferingUpdate(MediaPlayer mp, int percent) {
+		// TODO Auto-generated method stub
+		if(percent >1 ){
+			pro.dismiss();	
+		}
+	}
 }
