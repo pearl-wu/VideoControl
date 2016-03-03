@@ -29,7 +29,7 @@
             </feature>
         </config-file>
         <source-file src="src/android/VideoPlayer.java" target-dir="src/tw/com/bais/videoplayer" />
-
+	<source-file src="src/android/res/drawable/close_icon_black.png" target-dir="res/drawable" />
     </platform>
 
 </plugin>
