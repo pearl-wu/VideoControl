@@ -3,10 +3,10 @@ package tw.com.bais.videoplayer;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.res.AssetFileDescriptor;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -15,16 +15,14 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
 import org.apache.cordova.CallbackContext;
@@ -51,7 +49,6 @@ public class VideoPlayer extends CordovaPlugin implements OnCompletionListener, 
     private int videowidth = WindowManager.LayoutParams.MATCH_PARENT;
     private int videoheight = WindowManager.LayoutParams.MATCH_PARENT;
     private ProgressDialog pro;
-    private Button close_bn;
     
     /**
      * Executes the request and returns PluginResult.
@@ -83,7 +80,9 @@ public class VideoPlayer extends CordovaPlugin implements OnCompletionListener, 
             }
             
             pro = new ProgressDialog(cordova.getActivity());
+            pro.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             pro.setMessage("Loading....");
+            pro.setCancelable(false);
             WindowManager.LayoutParams propar = pro.getWindow().getAttributes();
             propar.x = videoXx;
             propar.y = videoYy;
@@ -146,35 +145,47 @@ public class VideoPlayer extends CordovaPlugin implements OnCompletionListener, 
         return uriString;
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN) 
     protected void openVideoDialog(String path, JSONObject options) {
         // Let's create the main dialog
         dialog = new Dialog(cordova.getActivity(), android.R.style.Theme_NoTitleBar);
         dialog.getWindow().getAttributes().windowAnimations = android.R.style.Animation_Dialog;
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(true);
-        dialog.setOnDismissListener(this);
+        //dialog.setCancelable(true);
+        //dialog.setOnDismissListener(this);
 
         // Main container layout
-        LinearLayout main = new LinearLayout(cordova.getActivity());
-        main.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        main.setOrientation(LinearLayout.VERTICAL);
-        main.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
-        main.setVerticalGravity(Gravity.CENTER_VERTICAL);
+        RelativeLayout main = new RelativeLayout(cordova.getActivity());
+        main.setBackgroundColor(Color.argb(0, 255, 0, 0));
+        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        main.setLayoutParams(p);
+	       // main.setOrientation(LinearLayout.VERTICAL);
+	       // main.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
+	       // main.setVerticalGravity(Gravity.CENTER_VERTICAL);
+        
+        ImageButton closebn = new ImageButton(cordova.getActivity());
+        closebn.setImageResource(R.drawable.close_icon_black);
+        closebn.setPadding(0, 0, 0, 0);
+        closebn.setAdjustViewBounds(true);
+       // closebn.setMaxWidth(80);
+        //closebn.setMaxHeight(80);
+        RelativeLayout.LayoutParams buttonpar = new RelativeLayout.LayoutParams(80, 80);
+        buttonpar.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        buttonpar.setMargins(0, -6, -6, 0);
+        closebn.setLayoutParams(buttonpar);
 
+        
         videoView = new VideoView(cordova.getActivity());
-        videoView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        // videoView.setVideoURI(uri);
-        // videoView.setVideoPath(path);
+        RelativeLayout.LayoutParams videopar = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        videoView.setLayoutParams(videopar);
+	        // videoView.setVideoURI(uri);
+	        // videoView.setVideoPath(path);
+        
+        
         main.addView(videoView);
+        main.addView(closebn);
         
-        close_bn = new Button(cordova.getActivity());
-        //FrameLayout bnf = new FrameLayout(cordova.getActivity());
-        //bnf.setLayoutParams(new LayoutParams(80, 80));
-        close_bn.setBackgroundResource(R.drawable.button_cross);
-        main.addView(close_bn);
-        
-
         player = new MediaPlayer();
         player.setOnPreparedListener(this);
         player.setOnCompletionListener(this);
@@ -275,7 +286,7 @@ public class VideoPlayer extends CordovaPlugin implements OnCompletionListener, 
         dialog.getWindow().setAttributes(lp);
         
         
-        close_bn.setOnClickListener(new OnClickListener() {
+        closebn.setOnClickListener(new OnClickListener() {
     		@Override
     		public void onClick(View v) {
     			player.stop();
@@ -287,12 +298,7 @@ public class VideoPlayer extends CordovaPlugin implements OnCompletionListener, 
         
     }
 
-    private Context getResources() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
+    @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         Log.e(LOG_TAG, "MediaPlayer.onError(" + what + ", " + extra + ")");
         if(mp.isPlaying()) {
