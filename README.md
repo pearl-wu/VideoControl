@@ -18,5 +18,5 @@
         
         
 ###options
-   volume: 0.0 ~ 1.0
-   scalingMode: vodeo scaling mode,  SCALE_TO_FIT (default)  SCALE_TO_FIT_WITH_CROPPING
+           volume: 0.0 ~ 1.0
+           scalingMode: vodeo scaling mode,  SCALE_TO_FIT (default)  SCALE_TO_FIT_WITH_CROPPING
