@@ -13,5 +13,5 @@
             }
        );
 
-###video close
+###close video
         VideoPlayer.close();
