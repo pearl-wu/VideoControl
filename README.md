@@ -1,6 +1,6 @@
 # video_view
 
-##open video
+###open video
         VideoPlayer.play(
             str,
             {
@@ -13,5 +13,5 @@
             }
        );
 
-##video close
+###video close
         VideoPlayer.close();
