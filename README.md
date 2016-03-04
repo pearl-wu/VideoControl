@@ -1,8 +1,9 @@
 # video_view
 
 ###Instakkation
-cordova plugin add tw.com.bais.videoplayer
-cordova plugin add https://github.com/pearl-wu/video_view.git
+        cordova plugin add tw.com.bais.videoplayer
+        or
+        cordova plugin add https://github.com/pearl-wu/video_view.git
 
 ###open video
         VideoPlayer.play(
