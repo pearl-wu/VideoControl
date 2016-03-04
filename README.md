@@ -1,5 +1,9 @@
 # video_view
 
+###Instakkation
+        cordova plugin add tw.com.bais.videoplayer
+        cordova plugin add
+
 ###open video
         VideoPlayer.play(
             str,
