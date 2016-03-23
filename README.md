@@ -1,4 +1,4 @@
-# video_view
+# Video Comntrol 
 
 ###Instakkation
         cordova plugin add tw.com.bais.videoplayer
