@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    id="tw.com.bais.videoplayer"
+    id="com.bais.cordova.customvideo"
     version="1.0">
 
     <name>Video Player</name>
     <description>Native Video Player Plugin</description>
     <license>pearl</license>
     <keywords>media,video player</keywords>
-    <repo>https://github.com/pearl-wu/video_view.git</repo>
-    <issue>https://github.com/pearl-wu/video_view.git</issue>
+    <repo>https://github.com/pearl-wu/customvideo.git</repo>
+    <issue>https://github.com/pearl-wu/customvideo.git</issue>
+   
+    <engines>
+        <engine name="cordova" version=">=4.0.0" />
+    </engines>
 
     <js-module src="www/videoplayer.js" name="VideoPlayer">
         <clobbers target="VideoPlayer" />
@@ -17,19 +21,44 @@
 	
     <platform name="android">
     	
+    	<config-file target="AndroidManifest.xml" parent="/manifest/application">
+		<activity android:configChanges="orientation|screenSize" android:label="VideoPlayerActivity" android:name="com.bais.cordova.video.VideoPlayerActivity" />
+		<activity android:configChanges="orientation|screenSize" android:label="VideoController" android:name="com.bais.cordova.video.VideoController"   />
+	</config-file>
+    	
 	<config-file target="AndroidManifest.xml" parent="/*">
-		  <uses-permission android:name="android.permission.INTERNET" />
-		  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-		  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+		<uses-permission android:name="android.permission.INTERNET" />
+		<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+		<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	</config-file>
     	
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="VideoPlayer">
-                <param name="android-package" value="tw.com.bais.videoplayer.VideoPlayer"/>
+                <param name="android-package" value="com.bais.cordova.video.VideoPlayer"/>
             </feature>
         </config-file>
-        <source-file src="libs/videoplayer.jar" target-dir="libs" />
-	<source-file src="res/drawable/close_icon_black.png" target-dir="res/drawable" />
+        <source-file src="src/android/VideoPlayer.java" target-dir="src/com/bais/cordova/video/" />
+        <source-file src="src/android/VideoController.java" target-dir="src/com/bais/cordova/video/" />
+        <source-file src="src/android/VideoPlayerController.java" target-dir="src/com/bais/cordova/video/" />
+        <source-file src="src/android/VideoPlayerActivity.java" target-dir="src/com/bais/cordova/video/" />
+        <source-file src="res/drawable/loading.png" target-dir="res/drawable/" />
+	<source-file src="res/drawable/sb_bar.xml" target-dir="res/drawable/" />
+	<source-file src="res/drawable/seekbar_horizontal.xml" target-dir="res/drawable/" />
+	
+	<source-file src="res/drawable-xhdpi/duck_bar.png" target-dir="res/drawable-xhdpi" />
+	<source-file src="res/drawable-xhdpi/ducky_bar.png" target-dir="res/drawable-xhdpi" />
+	<source-file src="res/drawable-xhdpi/ffwd.png" target-dir="res/drawable-xhdpi" />
+	<source-file src="res/drawable-xhdpi/next.png" target-dir="res/drawable-xhdpi" />
+	<source-file src="res/drawable-xhdpi/pause.png" target-dir="res/drawable-xhdpi" />
+	<source-file src="res/drawable-xhdpi/play.png" target-dir="res/drawable-xhdpi" />
+	<source-file src="res/drawable-xhdpi/prev.png" target-dir="res/drawable-xhdpi" />
+	<source-file src="res/drawable-xhdpi/rew.png" target-dir="res/drawable-xhdpi" />
+	
+	<source-file src="res/layout/activity_video.xml" target-dir="res/layout/" />
+	<source-file src="res/layout/video_controller.xml" target-dir="res/layout/" />
+	<source-file src="res/values/styles.xml" target-dir="res/values/" />
+	
     </platform>
 
 </plugin>
+
