@@ -1,12 +1,7 @@
 package com.bais.cordova.video;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import com.bais.cordova.video.VideoPlayerController.MediaPlayerControl;
-import cn.com.ebais.kyytvhismart.R;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.AudioManager;
@@ -31,24 +26,30 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
+import com.bais.cordova.video.VideoPlayerController.MediaPlayerControl;
+import java.io.IOException;
+import java.util.ArrayList;
+import org.apache.cordova.LOG;
+import cn.com.ebais.kyytvhismart.R;
+
 
 public class VideoPlayerActivity extends Activity implements SurfaceHolder.Callback, OnPreparedListener, OnInfoListener, OnErrorListener, OnCompletionListener, OnBufferingUpdateListener, MediaPlayerControl {
     
      private Bundle 			extras;
-	 private int 				number;
-	 private int 				totle = 0;
+	 private int 			number;
+	 private int 			totle = 0;
 	 private ArrayList<String>	mediaurls;
 	 private SurfaceView 		videoSurface;
 	 private SurfaceHolder 		videoHolder;
 	 private MediaPlayer 		player;
 	 private VideoPlayerController controller;
-	 private ImageView 			loading;
-	 private int 				gposition = 0;
-	 private int 				ii = 1;
-	 private boolean 			err = true;
-	 private Runnable 			r;
-	 private boolean 			onll = false;
-	 private Handler 			handler = new Handler();
+	 private ImageView 		loading;
+	 private int 			gposition = 0;
+	 private int 			ii = 1;
+	 private boolean 		err = true;
+	 private Runnable 		r;
+	 private boolean 		onll = false;
+	 private Handler 		handler = new Handler();
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
