@@ -43,10 +43,8 @@ public class VideoPlayerActivity extends Activity implements SurfaceHolder.Callb
 	 private MediaPlayer 		player;
 	 private VideoPlayerController controller;
 	 private ImageView 			loading;
-	 private boolean 			yes;
 	 private int 				gposition = 0;
 	 private int 				ii = 1;
-	 private int 				bb = 1;
 	 private boolean 			err = true;
 	 private Runnable 			r;
 	 private boolean 			onll = false;
@@ -63,47 +61,40 @@ public class VideoPlayerActivity extends Activity implements SurfaceHolder.Callb
 	        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 	       break;
 	 }
-
-    	requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        extras = getIntent().getExtras();
-        number = extras.getInt("medianumber");
-        mediaurls = extras.getStringArrayList("mediaUrl");  
-        
-        setContentView(R.layout.video_activity);
-        videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
-        loading = (ImageView) findViewById(R.id.loading);
-        
-        videoHolder = videoSurface.getHolder();
-        videoHolder.addCallback(this);
-        controller = new VideoPlayerController(this);
-        player = new MediaPlayer();
-        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-    	player.setOnCompletionListener(this);
-    	player.setOnPreparedListener(this);
-    	player.setOnBufferingUpdateListener(this);
-    	player.setOnErrorListener(this);
-    	player.setOnInfoListener(this);
-		r = new Runnable(){
-			public void run() {
-				playering(0);
-			}
-		};
-		handler.postDelayed(r, 10000);
-    	totle++;
-    	onll = true;
+	
+		
+	    	requestWindowFeature(Window.FEATURE_NO_TITLE);
+			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	
+	        extras = getIntent().getExtras();
+	        number = extras.getInt("medianumber");
+	        mediaurls = extras.getStringArrayList("mediaUrl");  
+	        
+	        setContentView(R.layout.video_activity);
+	        videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
+	        loading = (ImageView) findViewById(R.id.loading);
+	        
+	        videoHolder = videoSurface.getHolder();
+	        videoHolder.addCallback(this);
+	        controller = new VideoPlayerController(this);
+	        player = new MediaPlayer();
+	        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+	    	player.setOnCompletionListener(this);
+	    	player.setOnPreparedListener(this);
+	    	player.setOnBufferingUpdateListener(this);
+	    	player.setOnErrorListener(this);
+	    	player.setOnInfoListener(this);
+			r = new Runnable(){
+				public void run() {
+					playering(0);
+				}
+			};
+			handler.postDelayed(r, 3000);
+	    	totle++;
+	    	onll = true;	    	
     }
 
-	public void onPlayers(){
-		/*if(bb==6){
-			timerTask(r);
-			finish();
-			Toast.makeText(getBaseContext(), "播放失败,请确认网路连线。", Toast.LENGTH_SHORT).show();
-			return ;
-		}*/
-	}
 
 	public void playering(int mm) {
 		try {
@@ -138,19 +129,29 @@ public class VideoPlayerActivity extends Activity implements SurfaceHolder.Callb
     }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {}
+    public void surfaceDestroyed(SurfaceHolder holder) {
+    	LOG.e("mmmmmm",player.isPlaying()+"-1");
+        if(isPlaying()){
+        	player.stop();
+        }
+        number = 0;
+        timerTask(r);
+    }
     // End SurfaceHolder.Callback
 
     
     // Implement MediaPlayer.OnPreparedListener
     @Override
     public void onPrepared(MediaPlayer mp) {
+    	loading.setVisibility(View.GONE);
 	    controller.setMediaPlayer(this);
 	    controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
     }
 
 	@Override
 	public boolean onInfo(MediaPlayer mp, int what, int extra) {
+		LOG.e("mmmmmm",mp.getCurrentPosition()+"-onInfo");
+		
 		if(mp.getCurrentPosition()>0){
 			gposition = mp.getCurrentPosition();
 			loading.setVisibility(View.GONE);
@@ -161,6 +162,11 @@ public class VideoPlayerActivity extends Activity implements SurfaceHolder.Callb
 				onll=false;
 			}
 		}
+		
+		if(what==MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING){
+			Toast.makeText(getApplication(), "播放发生错误", Toast.LENGTH_SHORT).show();
+		}		
+
 		return false;
 	}
 
@@ -197,7 +203,13 @@ public class VideoPlayerActivity extends Activity implements SurfaceHolder.Callb
 	
 	@Override
     protected void onDestroy() {
-        super.onDestroy();        
+        super.onDestroy(); 
+        LOG.e("mmmmmm",player.isPlaying()+"-2");
+        if(isPlaying()){
+        	player.stop();
+        }
+        number = 0;
+        timerTask(r);
         //Log.i("..............", "onDestory()............");
         return ;
     }
@@ -213,9 +225,7 @@ public class VideoPlayerActivity extends Activity implements SurfaceHolder.Callb
 	public boolean onError(final MediaPlayer mp, final int what, final int extra) {
 		ii++;
 		err = false;
-		if(yes!=true) {
-			errstart();
-		}				
+		errstart();			
 		return false;		
 	}
 	
@@ -247,9 +257,7 @@ public class VideoPlayerActivity extends Activity implements SurfaceHolder.Callb
 	        		player.start();
 	        		return true;
 	        	}
-	        }else if( event.getKeyCode() == KeyEvent.KEYCODE_ESCAPE || event.getKeyCode() == 4) {
-	    		yes = true;
-	        	player.stop();
+	        }else if( event.getKeyCode() == KeyEvent.KEYCODE_ESCAPE) {
 				Log.d("dddddd","stop");
 	    		finish();	    		 
 	    		return false;
