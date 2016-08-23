@@ -45,14 +45,14 @@
 	<source-file src="res/drawable/sb_bar.xml" target-dir="res/drawable/" />
 	<source-file src="res/drawable/seekbar_horizontal.xml" target-dir="res/drawable/" />
 	
-	<source-file src="res/drawable-xhdpi/duck_bar.png" target-dir="res/drawable-xhdpi" />
-	<source-file src="res/drawable-xhdpi/ducky_bar.png" target-dir="res/drawable-xhdpi" />
-	<source-file src="res/drawable-xhdpi/ffwd.png" target-dir="res/drawable-xhdpi" />
-	<source-file src="res/drawable-xhdpi/next.png" target-dir="res/drawable-xhdpi" />
-	<source-file src="res/drawable-xhdpi/pause.png" target-dir="res/drawable-xhdpi" />
-	<source-file src="res/drawable-xhdpi/play.png" target-dir="res/drawable-xhdpi" />
-	<source-file src="res/drawable-xhdpi/prev.png" target-dir="res/drawable-xhdpi" />
-	<source-file src="res/drawable-xhdpi/rew.png" target-dir="res/drawable-xhdpi" />
+	<source-file src="res/drawable-xxhdpi/duck_bar.png" target-dir="res/drawable-xxhdpi" />
+	<source-file src="res/drawable-xxhdpi/ducky_bar.png" target-dir="res/drawable-xxhdpi" />
+	<source-file src="res/drawable-xxhdpi/ffwd.png" target-dir="res/drawable-xxhdpi" />
+	<source-file src="res/drawable-xxhdpi/next.png" target-dir="res/drawable-xxhdpi" />
+	<source-file src="res/drawable-xxhdpi/pause.png" target-dir="res/drawable-xxhdpi" />
+	<source-file src="res/drawable-xxhdpi/play.png" target-dir="res/drawable-xxhdpi" />
+	<source-file src="res/drawable-xxhdpi/prev.png" target-dir="res/drawable-xxhdpi" />
+	<source-file src="res/drawable-xxhdpi/rew.png" target-dir="res/drawable-xxhdpi" />
 	
 	<source-file src="res/layout/video_activity.xml" target-dir="res/layout/" />
 	<source-file src="res/layout/video_controller.xml" target-dir="res/layout/" />
